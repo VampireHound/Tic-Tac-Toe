@@ -1,11 +1,13 @@
 #include <iostream>
 
+
 char Board[3][3] =
 {
     {' ', ' ', ' '},
     {' ', ' ', ' '},
     {' ', ' ', ' '}
 };
+
 
 void DisplayGame() 
 {
@@ -21,6 +23,7 @@ void DisplayGame()
         std::cout << " ___ ___ ___ \n";
     }
 }
+
 
 bool Win(char player)
 {
@@ -45,6 +48,7 @@ bool Win(char player)
     return false;
 }
 
+
 bool BoardFull()
 {
     for (int i = 0; i < 3; i++)
@@ -61,37 +65,51 @@ bool BoardFull()
 }
 
 
+bool IsValidInput(int& input)
+{
+    std::cin >> input;
+
+    if (std::cin.fail()) 
+    {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
+        std::cout << "Please enter a valid number between 0 and 2.\n";
+        return false;
+    }
+
+    if (input < 0 || input > 2)
+    {
+        std::cout << "Please choose a number between 0-2.\n";
+        return false;
+    }
+
+    return true;
+}
+
+
 int main()
 {
     int row, column;
     char Player = 'X';
 
-
     while (true)
     {
         DisplayGame();
 
-        std::cout << "Player " << Player << " enter row: ";
-        std::cin >> row;
-
-        if (row < 0 || row > 2)
+        do
         {
-            std::cout << "Enter a valid row!!\n";
-            continue;
-        }
+            std::cout << "Player " << Player << ", enter row (0-2): ";
+        } while (!IsValidInput(row));
 
-        std::cout << "Enter column: ";
-        std::cin >> column;
-
-        if (column < 0 || column > 2)
+        do
         {
-            std::cout << "Enter a valid column!!\n";
-            continue;
-        }
+            std::cout << "Enter column (0-2): ";
+        } while (!IsValidInput(column));
+
 
         if (Board[row][column] == 'O' || Board[row][column] == 'X')
         {
-            std::cout << "Choose a different placement\n";
+            std::cout << "Cell already taken. Choose a different one.\n";
             continue;
         }
         else
@@ -99,22 +117,22 @@ int main()
             Board[row][column] = Player;
         }
 
+
         if (Win(Player))
         {
             DisplayGame();
-            std::cout << "Player " << Player << " WINS!!!";
+            std::cout << "Player " << Player << " WINS!!!\n";
             break;
         }
         else if (BoardFull())
         {
             DisplayGame();
-            std::cout << "Its A Draw";
+            std::cout << "It's a Draw!\n";
             break;
         }
 
         Player = (Player == 'X') ? 'O' : 'X';
-
     }
 
-	return 0;
+    return 0;
 }
